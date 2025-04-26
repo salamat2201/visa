@@ -25,6 +25,7 @@ COPY . /app/
 RUN mkdir -p /app/staticfiles /app/media /app/logs
 
 # Права на выполнение entrypoint скрипта
+COPY docker-entrypoint.sh /app/
 RUN chmod +x /app/docker-entrypoint.sh
 
 # Порт, который будет доступен извне

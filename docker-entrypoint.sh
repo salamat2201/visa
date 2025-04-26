@@ -4,6 +4,9 @@
 export PORT=${PORT:-8000}
 echo "Using port: $PORT"
 
+# Создание директории static если её нет
+mkdir -p /app/static
+
 # Проверка наличия DATABASE_URL (для Railway)
 if [ -n "$DATABASE_URL" ]; then
     echo "Using DATABASE_URL from environment"
@@ -56,4 +59,11 @@ else:
 
 # Запуск сервера Gunicorn с использованием порта из переменной окружения
 echo "Starting Gunicorn server on port $PORT..."
-exec gunicorn eurowork2020.wsgi:application --bind 0.0.0.0:$PORT --timeout 120
+echo "Complete environment info:"
+echo "DATABASE_URL: ${DATABASE_URL:-Not set}"
+echo "ALLOWED_HOSTS: $ALLOWED_HOSTS"
+echo "Current directory: $(pwd)"
+echo "Files in current directory: $(ls -la)"
+
+# Запускаем Django с подробными логами
+exec gunicorn eurowork2020.wsgi:application --bind 0.0.0.0:$PORT --timeout 120 --log-level debug
