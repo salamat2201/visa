@@ -1,35 +1,31 @@
 FROM python:3.11-slim
 
-# Установка зависимостей системы
+# Устанавливаем необходимые зависимости
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    postgresql-client \
     gettext \
     && rm -rf /var/lib/apt/lists/*
 
-# Установка рабочей директории
 WORKDIR /app
 
-# Установка переменных окружения
+# Устанавливаем переменные окружения
 ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    PORT=8000
+    PYTHONUNBUFFERED=1
 
-# Копирование зависимостей и их установка
+# Устанавливаем зависимости
 COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Копирование проекта
+# Копируем проект
 COPY . /app/
 
-# Создание директорий для статических и медиа файлов
+# Создаём директории
 RUN mkdir -p /app/staticfiles /app/media /app/logs
 
-# Права на выполнение entrypoint скрипта
-COPY docker-entrypoint.sh /app/
+# Даём права на исполнение entrypoint
 RUN chmod +x /app/docker-entrypoint.sh
 
-# Порт, который будет доступен извне
-EXPOSE ${PORT}
+# Открываем порт (Railway использует PORT из переменных окружения)
+EXPOSE 8000
 
-# Запуск entrypoint скрипта
+# Запускаем entrypoint скрипт
 ENTRYPOINT ["/app/docker-entrypoint.sh"]

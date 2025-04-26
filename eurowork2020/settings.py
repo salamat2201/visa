@@ -9,7 +9,6 @@ dotenv.load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-print(f"BASE_DIR is: {BASE_DIR}")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -19,15 +18,14 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-change-this-key-in-pr
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False').lower() in ('true', '1', 't', 'yes')
-print(f"DEBUG mode is: {DEBUG}")
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,.railway.app').split(',')
+# Разрешаем доступ к приложению с Railway домена
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,*.railway.app').split(',')
 
 # Настройка порта для Railway
 PORT = int(os.environ.get('PORT', 8000))
 
 # Application definition
-
 INSTALLED_APPS = [
     'modeltranslation',  # Должен быть перед админкой
     'django.contrib.admin',
@@ -47,7 +45,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # Добавлено для обработки статических файлов
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Для обработки статических файлов
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',  # Для многоязычности
     'django.middleware.common.CommonMiddleware',
@@ -78,36 +76,15 @@ TEMPLATES = [
 WSGI_APPLICATION = 'eurowork2020.wsgi.application'
 
 # Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-# Настройка базы данных с поддержкой DATABASE_URL для Railway
+# Упрощенная настройка базы данных через dj-database-url
 DATABASES = {
     'default': dj_database_url.config(
         default=os.environ.get('DATABASE_URL'),
-        conn_max_age=600,
-        conn_health_checks=True,
+        conn_max_age=600
     )
 }
 
-# Если DATABASE_URL не установлен, используйте локальные настройки
-if not os.environ.get('DATABASE_URL'):
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.environ.get('DB_NAME', 'eurowork'),
-            'USER': os.environ.get('DB_USER', 'postgres'),
-            'PASSWORD': os.environ.get('DB_PASSWORD', 'postgres'),
-            'HOST': os.environ.get('DB_HOST', 'db'),
-            'PORT': os.environ.get('DB_PORT', '5432'),
-            'OPTIONS': {
-                'connect_timeout': 5,
-            }
-        }
-    }
-
 # Password validation
-# https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -124,16 +101,10 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Internationalization
-# https://docs.djangoproject.com/en/4.2/topics/i18n/
-
 LANGUAGE_CODE = 'ru'
-
 TIME_ZONE = 'Asia/Almaty'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
 LANGUAGE_COOKIE_NAME = 'django_language'
@@ -157,13 +128,11 @@ LOCALE_PATHS = [
 MODELTRANSLATION_DEFAULT_LANGUAGE = 'ru'
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
-
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = []
 
-# Создаём папку static если она существует
+# Проверяем и добавляем директорию static если она существует
 static_dir = os.path.join(BASE_DIR, 'static')
 if os.path.exists(static_dir):
     STATICFILES_DIRS.append(static_dir)
@@ -176,8 +145,6 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Настройка Crispy Forms
@@ -196,26 +163,25 @@ if not DEBUG:
     SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
 
 # Настройки логирования
-# В settings.py
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'handlers': {
         'console': {
-            'level': 'DEBUG',
+            'level': 'INFO',
             'class': 'logging.StreamHandler',
         },
     },
     'loggers': {
         'django': {
             'handlers': ['console'],
-            'level': 'DEBUG',
+            'level': 'INFO',
             'propagate': True,
         },
     },
 }
 
-# Создание директории для логов, если она не существует
+# Создание директории для логов
 if not os.path.exists(os.path.join(BASE_DIR, 'logs')):
     os.makedirs(os.path.join(BASE_DIR, 'logs'))
 
@@ -238,12 +204,3 @@ CACHES = {
         'LOCATION': 'eurowork-cache',
     }
 }
-
-# В продакшн среде рекомендуется использовать Redis или Memcached:
-if not DEBUG and os.environ.get('CACHE_REDIS', 'False') == 'True':
-    CACHES = {
-        'default': {
-            'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-            'LOCATION': os.environ.get('REDIS_URL', 'redis://redis:6379/1'),
-        }
-    }
