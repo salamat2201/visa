@@ -32,5 +32,10 @@ else:
     print('Superuser already exists.')
 "
 
-# Запуск команды из docker-compose
-exec "$@"
+# Настройка порта для Railway
+export PORT=${PORT:-8000}
+echo "Using port: $PORT"
+
+# Запуск сервера Gunicorn с использованием порта из переменной окружения
+echo "Starting Gunicorn server on port $PORT..."
+exec gunicorn eurowork2020.wsgi:application --bind 0.0.0.0:$PORT

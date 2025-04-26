@@ -15,8 +15,7 @@ services:
       - db
     env_file:
       - ./.env
-    command: gunicorn eurowork2020.wsgi:application --bind 0.0.0.0:8000
-
+    command: gunicorn eurowork2020.wsgi:application --bind 0.0.0.0:${PORT:-8000}
   db:
     image: postgres:15
     container_name: eurowork_db
