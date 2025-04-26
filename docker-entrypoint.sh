@@ -32,25 +32,19 @@ echo "Сбор статических файлов..."
 python manage.py collectstatic --noinput
 
 # Создание суперпользователя
-echo "Проверка существования суперпользователя..."
-python -c "
-import os
+echo "Создание суперпользователя..."
+DJANGO_SUPERUSER_USERNAME=${DJANGO_SUPERUSER_USERNAME:-admin}
+DJANGO_SUPERUSER_EMAIL=${DJANGO_SUPERUSER_EMAIL:-admin@example.com}
+DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD:-admin}
+
+python manage.py shell -c "
 from django.contrib.auth import get_user_model
 User = get_user_model()
-DJANGO_SUPERUSER_USERNAME = os.environ.get('DJANGO_SUPERUSER_USERNAME', 'admin')
-DJANGO_SUPERUSER_EMAIL = os.environ.get('DJANGO_SUPERUSER_EMAIL', 'admin@example.com')
-DJANGO_SUPERUSER_PASSWORD = os.environ.get('DJANGO_SUPERUSER_PASSWORD', 'admin')
-
-if not User.objects.filter(username=DJANGO_SUPERUSER_USERNAME).exists():
-    print('Создание суперпользователя...')
-    User.objects.create_superuser(
-        username=DJANGO_SUPERUSER_USERNAME,
-        email=DJANGO_SUPERUSER_EMAIL,
-        password=DJANGO_SUPERUSER_PASSWORD
-    )
-    print(f'Суперпользователь {DJANGO_SUPERUSER_USERNAME} создан')
+if not User.objects.filter(username='$DJANGO_SUPERUSER_USERNAME').exists():
+    User.objects.create_superuser('$DJANGO_SUPERUSER_USERNAME', '$DJANGO_SUPERUSER_EMAIL', '$DJANGO_SUPERUSER_PASSWORD')
+    print('Суперпользователь создан')
 else:
-    print(f'Суперпользователь {DJANGO_SUPERUSER_USERNAME} уже существует')
+    print('Суперпользователь уже существует')
 "
 
 # Запуск Gunicorn
