@@ -66,4 +66,5 @@ echo "Current directory: $(pwd)"
 echo "Files in current directory: $(ls -la)"
 
 # Запускаем Django с подробными логами
-exec gunicorn eurowork2020.wsgi:application --bind 0.0.0.0:$PORT --timeout 120 --log-level debug
+# В конце docker-entrypoint.sh
+exec gunicorn eurowork2020.wsgi:application --bind 0.0.0.0:$PORT --workers=2 --timeout=30 --log-level=debug
