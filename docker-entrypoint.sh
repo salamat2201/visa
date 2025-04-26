@@ -1,12 +1,34 @@
 #!/bin/bash
 
-# Ожидание запуска PostgreSQL
-echo "Waiting for PostgreSQL to start..."
-while ! pg_isready -h $DB_HOST -p $DB_PORT -U $DB_USER
-do
-  echo "Waiting for database connection..."
-  sleep 2
-done
+# Настройка порта для Railway
+export PORT=${PORT:-8000}
+echo "Using port: $PORT"
+
+# Проверка наличия DATABASE_URL (для Railway)
+if [ -n "$DATABASE_URL" ]; then
+    echo "Using DATABASE_URL from environment"
+else
+    # Ожидание запуска PostgreSQL если нет DATABASE_URL
+    echo "Waiting for PostgreSQL to start..."
+    while ! pg_isready -h $DB_HOST -p $DB_PORT -U $DB_USER
+    do
+      echo "Waiting for database connection..."
+      sleep 2
+    done
+    
+    # Установка переменной PGPASSWORD для авторизации
+    export PGPASSWORD=$DB_PASSWORD
+    
+    # Проверка существования базы данных и её создание, если не существует
+    echo "Checking if database exists..."
+    DB_EXISTS=$(psql -h $DB_HOST -p $DB_PORT -U $DB_USER -tAc "SELECT 1 FROM pg_database WHERE datname='$DB_NAME'")
+    if [ "$DB_EXISTS" != "1" ]; then
+      echo "Database does not exist. Creating database..."
+      psql -h $DB_HOST -p $DB_PORT -U $DB_USER -c "CREATE DATABASE $DB_NAME;"
+    else
+      echo "Database exists."
+    fi
+fi
 
 # Применение миграций
 echo "Applying database migrations..."
@@ -32,10 +54,6 @@ else:
     print('Superuser already exists.')
 "
 
-# Настройка порта для Railway
-export PORT=${PORT:-8000}
-echo "Using port: $PORT"
-
 # Запуск сервера Gunicorn с использованием порта из переменной окружения
 echo "Starting Gunicorn server on port $PORT..."
-exec gunicorn eurowork2020.wsgi:application --bind 0.0.0.0:$PORT
+exec gunicorn eurowork2020.wsgi:application --bind 0.0.0.0:$PORT --timeout 120
