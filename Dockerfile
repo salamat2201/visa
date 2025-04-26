@@ -1,31 +1,39 @@
 FROM python:3.11-slim
 
-# Устанавливаем необходимые зависимости
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    gettext \
-    && rm -rf /var/lib/apt/lists/*
+# Установка переменных окружения
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONPATH="${PYTHONPATH}:/app"
 
+# Установка рабочей директории
 WORKDIR /app
 
-# Устанавливаем переменные окружения
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+# Установка системных зависимостей
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    postgresql-client \
+    netcat-traditional \
+    libpq-dev \
+    gettext \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# Устанавливаем зависимости
+# Установка зависимостей Python
 COPY requirements.txt /app/
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --upgrade pip && \
+    pip install -r requirements.txt
 
-# Копируем проект
+# Копирование проекта
 COPY . /app/
 
-# Создаём директории
+# Убедимся, что директория для статических файлов существует
 RUN mkdir -p /app/staticfiles /app/media /app/logs
 
-# Даём права на исполнение entrypoint
+# Компиляция файлов переводов
+RUN django-admin compilemessages
+
+# Настройка entrypoint
+COPY docker-entrypoint.sh /app/docker-entrypoint.sh
 RUN chmod +x /app/docker-entrypoint.sh
 
-# Открываем порт (Railway использует PORT из переменных окружения)
-EXPOSE 8000
-
-# Запускаем entrypoint скрипт
 ENTRYPOINT ["/app/docker-entrypoint.sh"]

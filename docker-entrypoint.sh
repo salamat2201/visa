@@ -1,36 +1,24 @@
 #!/bin/bash
 
-# Получаем порт из переменной окружения или используем 8000 по умолчанию
-export PORT=${PORT:-8000}
-echo "Using port: $PORT"
+set -e
 
-# Создаём директории если они не существуют
-mkdir -p /app/static /app/media /app/logs
+# Проверка доступности базы данных
+echo "Ожидание готовности базы данных..."
+export PGPASSWORD=$POSTGRES_PASSWORD
+until psql -h "$PGHOST" -U "$PGUSER" -d "$PGDATABASE" -c '\q'; do
+  >&2 echo "База данных еще не доступна - ожидание..."
+  sleep 2
+done
+echo "База данных готова!"
 
-# Применяем миграции
-echo "Applying database migrations..."
-python manage.py migrate
+# Применение миграций
+echo "Применение миграций базы данных..."
+python manage.py migrate --noinput
 
-# Компилируем переводы
-echo "Compiling translations..."
-python manage.py compilemessages
-
-# Собираем статические файлы
-echo "Collecting static files..."
+# Сбор статических файлов
+echo "Сбор статических файлов..."
 python manage.py collectstatic --noinput
 
-# Создаём суперпользователя если он не существует
-echo "Creating superuser if not exists..."
-python manage.py shell -c "
-from django.contrib.auth import get_user_model;
-User = get_user_model();
-if not User.objects.filter(username='$DJANGO_SUPERUSER_USERNAME').exists():
-    User.objects.create_superuser('$DJANGO_SUPERUSER_USERNAME', '$DJANGO_SUPERUSER_EMAIL', '$DJANGO_SUPERUSER_PASSWORD');
-    print('Superuser created.');
-else:
-    print('Superuser already exists.')
-"
-
-# Запускаем Gunicorn
-echo "Starting Gunicorn server on port $PORT..."
-exec gunicorn eurowork2020.wsgi:application --bind 0.0.0.0:$PORT --workers=2 --timeout=30
+# Запуск Gunicorn
+echo "Запуск Gunicorn..."
+exec gunicorn eurowork2020.wsgi:application --bind 0.0.0.0:8000 --workers 2 --threads 2 --timeout 120
