@@ -229,3 +229,6 @@ CACHES = {
         'LOCATION': 'eurowork-cache',
     }
 }
+
+# В settings.py
+CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(',')
