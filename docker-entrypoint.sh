@@ -2,12 +2,24 @@
 
 set -e
 
+# Вывод информации о подключении к базе данных для отладки
+echo "Информация о подключении к базе данных:"
+echo "PGHOST: $PGHOST"
+echo "PGPORT: $PGPORT"
+echo "PGUSER: $PGUSER"
+echo "PGDATABASE: $PGDATABASE"
+
 # Проверка доступности базы данных
 echo "Ожидание готовности базы данных..."
 export PGPASSWORD=$POSTGRES_PASSWORD
-until psql -h "$PGHOST" -U "$PGUSER" -d "$PGDATABASE" -c '\q'; do
+
+# Задержка перед первой проверкой
+sleep 5
+
+# Попытка подключения к базе данных
+until pg_isready -h "$PGHOST" -p "$PGPORT" -U "$PGUSER"; do
   >&2 echo "База данных еще не доступна - ожидание..."
-  sleep 2
+  sleep 5
 done
 echo "База данных готова!"
 
