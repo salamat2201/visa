@@ -20,6 +20,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Копирование проекта
 COPY . /app/
 
+# Создание необходимых директорий
+RUN mkdir -p /app/staticfiles /app/media /app/static
+
 # Создание директорий для статических и медиа файлов
 RUN mkdir -p /app/staticfiles /app/media
 
