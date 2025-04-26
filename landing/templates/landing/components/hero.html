@@ -1,0 +1,81 @@
+{% load i18n %}
+{% load static %}
+
+<section id="hero" class="relative bg-gradient-to-r from-blue-600 to-blue-800 text-white py-24 md:py-32">
+    <!-- Фоновый узор -->
+    <div class="absolute inset-0 z-0 opacity-10">
+        <img src="https://m.media-amazon.com/images/I/81PfCQn9PaS._AC_UF894,1000_QL80_.jpg" alt="" class="w-full h-full object-cover">
+    </div>
+    
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div class="text-center md:text-left fade-in">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
+                    {{ site_config.site_name }}
+                </h1>
+                
+                <p class="text-xl md:text-2xl mb-8 text-blue-100">
+                    {{ site_config.site_slogan|default:_("Ваш надежный партнер в получении виз для работы в Европе") }}
+                </p>
+                
+                <div class="flex flex-wrap gap-4 justify-center md:justify-start">
+                    <a href="#contact" class="bg-white text-blue-600 hover:bg-blue-50 px-6 py-3 rounded-lg font-semibold transition-colors shadow-lg transform hover:scale-105 duration-200 inline-flex items-center">
+                        <i class="fas fa-envelope mr-2"></i>
+                        {% trans "Связаться" %}
+                    </a>
+                    
+                    <a href="#visa-directions" class="bg-transparent border-2 border-white text-white hover:bg-white hover:text-blue-600 px-6 py-3 rounded-lg font-semibold transition-colors inline-flex items-center">
+                        <i class="fas fa-plane-departure mr-2"></i>
+                        {% trans "Направления" %}
+                    </a>
+                </div>
+            </div>
+            
+            <div class="hidden md:block">
+                <img src="{% static 'images/visa-illustration.svg' %}" alt="{% trans 'Визовые услуги' %}" class="w-full max-w-md mx-auto fade-in">
+            </div>
+        </div>
+        
+        <!-- Блок преимуществ -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-16 fade-in">
+            <div class="bg-white/10 backdrop-blur-sm rounded-lg p-6 text-center hover:bg-white/20 transition-colors">
+                <div class="bg-blue-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-check text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">{% trans "Надежность" %}</h3>
+                <p class="text-blue-100">{% trans "Многолетний опыт работы и высокий процент успешных заявок" %}</p>
+            </div>
+            
+            <div class="bg-white/10 backdrop-blur-sm rounded-lg p-6 text-center hover:bg-white/20 transition-colors">
+                <div class="bg-blue-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-bolt text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">{% trans "Скорость" %}</h3>
+                <p class="text-blue-100">{% trans "Быстрое оформление документов и получение результатов" %}</p>
+            </div>
+            
+            <div class="bg-white/10 backdrop-blur-sm rounded-lg p-6 text-center hover:bg-white/20 transition-colors">
+                <div class="bg-blue-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-users text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">{% trans "Поддержка" %}</h3>
+                <p class="text-blue-100">{% trans "Индивидуальный подход и помощь на всех этапах" %}</p>
+            </div>
+            
+            <div class="bg-white/10 backdrop-blur-sm rounded-lg p-6 text-center hover:bg-white/20 transition-colors">
+                <div class="bg-blue-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-globe text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">{% trans "Многоязычность" %}</h3>
+                <p class="text-blue-100">{% trans "Обслуживание на русском, узбекском, таджикском и киргизском языках" %}</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Волнистый разделитель -->
+    <div class="absolute bottom-0 left-0 right-0">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 100" class="w-full h-auto">
+            <path fill="#f9fafb" fill-opacity="1" d="M0,32L80,42.7C160,53,320,75,480,74.7C640,75,800,53,960,42.7C1120,32,1280,32,1360,32L1440,32L1440,100L1360,100C1280,100,1120,100,960,100C800,100,640,100,480,100C320,100,160,100,80,100L0,100Z"></path>
+        </svg>
+    </div>
+</section>

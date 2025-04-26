@@ -1,0 +1,49 @@
+{% load i18n %}
+{% load static %}
+
+<section id="about" class="bg-gray-50 py-20">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4 text-gray-800">{% trans "О нас" %}</h2>
+            <div class="w-24 h-1 bg-blue-600 mx-auto mb-6"></div>
+            <p class="text-gray-600 max-w-3xl mx-auto text-lg">
+                {% trans "Мы помогаем людям осуществить их мечты о работе и жизни в Европе, предоставляя профессиональные визовые услуги." %}
+            </p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div class="fade-in">
+                <div class="relative">
+                    <img src="{% static 'images/office1.jpg' %}" alt="{% trans 'Наш офис' %}" class="w-full h-auto rounded-lg shadow-xl">
+                    <div class="absolute -bottom-6 -right-6 bg-blue-600 text-white py-4 px-6 rounded-lg shadow-lg">
+                        <p class="font-bold text-xl">{% trans "С 2020 года" %}</p>
+                        <p>{% trans "на рынке визовых услуг" %}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="fade-in">
+                <h3 class="text-2xl font-bold mb-6 text-gray-800">{{ site_config.site_name }} — {% trans "ваш надежный партнер" %}</h3>
+                
+                <div class="prose prose-lg max-w-none text-gray-600">
+                    {{ site_config.about_text|default:_("<p>Компания EuroWork2020 предоставляет профессиональные услуги по оформлению виз для работы в странах Европы и других направлениях.</p><p>Наша команда опытных специалистов поможет вам пройти все этапы получения визы быстро и без лишних хлопот. Мы ценим каждого клиента и стремимся обеспечить индивидуальный подход к каждому случаю.</p><p>Мы находимся в Алматы, Казахстан, и обслуживаем клиентов на четырех языках: русском, узбекском, таджикском и киргизском.</p>")|safe }}
+                </div>
+                
+                <div class="mt-8 grid grid-cols-2 md:grid-cols-3 gap-4">
+                    <div class="bg-white p-4 rounded-lg shadow text-center">
+                        <div class="text-3xl font-bold text-blue-600 mb-2">3000+</div>
+                        <div class="text-gray-700">{% trans "Успешных дел" %}</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow text-center">
+                        <div class="text-3xl font-bold text-blue-600 mb-2">98%</div>
+                        <div class="text-gray-700">{% trans "Одобренных виз" %}</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow text-center">
+                        <div class="text-3xl font-bold text-blue-600 mb-2">4</div>
+                        <div class="text-gray-700">{% trans "Языка обслуживания" %}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

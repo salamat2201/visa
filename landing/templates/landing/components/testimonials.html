@@ -1,0 +1,82 @@
+{% load i18n %}
+{% load static %}
+
+<section id="testimonials" class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4 text-gray-800">{% trans "Отзывы клиентов" %}</h2>
+            <div class="w-24 h-1 bg-blue-600 mx-auto mb-6"></div>
+            <p class="text-gray-600 max-w-3xl mx-auto text-lg">
+                {% trans "Узнайте, что говорят о нас наши клиенты" %}
+            </p>
+        </div>
+        
+        {% if testimonials %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for testimonial in testimonials %}
+            <div class="bg-blue-50 rounded-xl p-6 relative fade-in">
+                <!-- Иконка кавычек -->
+                <div class="absolute top-4 right-4 text-blue-200 opacity-50">
+                    <i class="fas fa-quote-right text-4xl"></i>
+                </div>
+                
+                <!-- Текст отзыва -->
+                <div class="mb-6 relative z-10">
+                    <div class="text-gray-700">
+                        {{ testimonial.text|linebreaks }}
+                    </div>
+                </div>
+                
+                <!-- Рейтинг (звезды) -->
+                <div class="flex text-yellow-400 mb-4">
+                    {% for i in "12345"|make_list %}
+                    <i class="fas fa-star {% if forloop.counter > testimonial.rating %}text-gray-300{% endif %}"></i>
+                    {% endfor %}
+                </div>
+                
+                <!-- Информация о клиенте -->
+                <div class="flex items-center">
+                    <div class="w-12 h-12 rounded-full overflow-hidden mr-4">
+                        {% if testimonial.client_photo %}
+                        <img src="{{ testimonial.client_photo.url }}" alt="{{ testimonial.client_name }}" class="w-full h-full object-cover">
+                        {% else %}
+                        <div class="w-full h-full bg-blue-200 flex items-center justify-center">
+                            <i class="fas fa-user text-blue-400"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <div class="font-bold text-gray-800">{{ testimonial.client_name }}</div>
+                        <div class="text-sm text-gray-500">{{ testimonial.date_added|date:"d.m.Y" }}</div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Если отзывов много, добавим кнопку загрузки дополнительных -->
+        {% if testimonials|length > 6 %}
+        <div class="text-center mt-10">
+            <button id="load-more-testimonials" class="bg-blue-100 hover:bg-blue-200 text-blue-600 px-6 py-3 rounded-lg font-medium transition-colors">
+                {% trans "Загрузить еще отзывы" %}
+            </button>
+        </div>
+        {% endif %}
+        
+        {% else %}
+        <div class="text-center py-12 text-gray-500">
+            <i class="fas fa-comments text-5xl mb-4"></i>
+            <p>{% trans "Отзывы клиентов скоро появятся." %}</p>
+        </div>
+        {% endif %}
+        
+        <!-- Призыв к действию -->
+        <div class="mt-16 text-center">
+            <p class="text-xl text-gray-700 mb-6">{% trans "Присоединяйтесь к нашим довольным клиентам — получите визу уже сегодня!" %}</p>
+            <a href="#contact" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors inline-flex items-center">
+                <i class="fas fa-paper-plane mr-2"></i>
+                {% trans "Оставить заявку" %}
+            </a>
+        </div>
+    </div>
+</section>

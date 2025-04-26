@@ -1,0 +1,107 @@
+{% load i18n %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+<section id="contact" class="py-20 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4 text-gray-800">{% trans "Связаться с нами" %}</h2>
+            <div class="w-24 h-1 bg-blue-600 mx-auto mb-6"></div>
+            <p class="text-gray-600 max-w-3xl mx-auto text-lg">
+                {% trans "Заполните форму ниже, и мы свяжемся с вами в ближайшее время" %}
+            </p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
+            <!-- Контактная информация -->
+            <div class="fade-in">
+                <div class="bg-white shadow-lg rounded-xl p-8">
+                    <h3 class="text-2xl font-bold mb-6 text-gray-800">{% trans "Наши контакты" %}</h3>
+                    
+                    <div class="space-y-6">
+                        {% if site_config.address %}
+                        <div class="flex items-start">
+                            <div class="bg-blue-100 text-blue-600 w-12 h-12 rounded-full flex items-center justify-center mr-4 shrink-0">
+                                <i class="fas fa-map-marker-alt text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold mb-1 text-gray-700">{% trans "Адрес" %}</p>
+                                <p class="text-gray-600">{{ site_config.address|linebreaks }}</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if site_config.email %}
+                        <div class="flex items-start">
+                            <div class="bg-blue-100 text-blue-600 w-12 h-12 rounded-full flex items-center justify-center mr-4 shrink-0">
+                                <i class="fas fa-envelope text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold mb-1 text-gray-700">Email</p>
+                                <a href="mailto:{{ site_config.email }}" class="text-blue-600 hover:text-blue-800 transition-colors">{{ site_config.email }}</a>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if site_config.phone %}
+                        <div class="flex items-start">
+                            <div class="bg-blue-100 text-blue-600 w-12 h-12 rounded-full flex items-center justify-center mr-4 shrink-0">
+                                <i class="fas fa-phone-alt text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold mb-1 text-gray-700">{% trans "Телефон" %}</p>
+                                <a href="tel:{{ site_config.phone }}" class="text-blue-600 hover:text-blue-800 transition-colors">{{ site_config.phone }}</a>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Социальные сети -->
+                    <div class="mt-8">
+                        <p class="font-bold mb-4 text-gray-700">{% trans "Мы в социальных сетях" %}</p>
+                        <div class="flex space-x-4">
+                            {% if site_config.whatsapp %}
+                            <a href="https://wa.me/{{ site_config.whatsapp }}" target="_blank" class="bg-green-500 hover:bg-green-600 text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors">
+                                <i class="fab fa-whatsapp"></i>
+                            </a>
+                            {% endif %}
+                            
+                            {% if site_config.telegram %}
+                            <a href="https://t.me/{{ site_config.telegram }}" target="_blank" class="bg-blue-500 hover:bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors">
+                                <i class="fab fa-telegram-plane"></i>
+                            </a>
+                            {% endif %}
+                            
+                            {% if site_config.instagram %}
+                            <a href="https://instagram.com/{{ site_config.instagram }}" target="_blank" class="bg-pink-500 hover:bg-pink-600 text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Карта -->
+                    <div class="mt-8 rounded-lg overflow-hidden h-64 bg-gray-200">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2906.9263830281544!2d76.9225525760372!3d43.252130079136!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38836ef98cb48f6f%3A0x3b2e8d6ad60ac51a!2z0KLQtdGB0YLQvtCy0YHQutCw0Y8gMjh2LCDQmtC-0LvRjNC90YvQuSDQv9C10YDQtdC90LjRjw!5e0!3m2!1sru!2skz!4v1714147222430!5m2!1sru!2skz" 
+                         >
+                        </iframe>
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <!-- Форма обратной связи -->
+            <div class="fade-in">
+                <div class="bg-white shadow-lg rounded-xl p-8">
+                    <h3 class="text-2xl font-bold mb-6 text-gray-800">{% trans "Напишите нам" %}</h3>
+                    
+                    <form method="post" action="{% url 'landing:home' %}#contact">
+                        {% csrf_token %}
+                        
+                        {% crispy form %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

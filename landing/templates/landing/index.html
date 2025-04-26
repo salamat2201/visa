@@ -1,0 +1,24 @@
+{% extends 'landing/base.html' %}
+{% load i18n %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <!-- Hero-секция -->
+    {% include 'landing/components/hero.html' %}
+    
+    <!-- О нас -->
+    {% include 'landing/components/about.html' %}
+    
+    <!-- Менеджеры -->
+    {% include 'landing/components/managers.html' %}
+    
+    <!-- Направления виз -->
+    {% include 'landing/components/visa_directions.html' %}
+    
+    <!-- Отзывы -->
+    {% include 'landing/components/testimonials.html' %}
+    
+    <!-- Контакты и форма обратной связи -->
+    {% include 'landing/components/contact.html' %}
+{% endblock %}
