@@ -1,405 +1,657 @@
-{% load static %}
-{% load i18n %}
+{% load static %} {% load i18n %}
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}" class="scroll-smooth">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <!-- Meta Pixel Code -->
+    <script>
+      !(function (f, b, e, v, n, t, s) {
+        if (f.fbq) return;
+        n = f.fbq = function () {
+          n.callMethod
+            ? n.callMethod.apply(n, arguments)
+            : n.queue.push(arguments);
+        };
+        if (!f._fbq) f._fbq = n;
+        n.push = n;
+        n.loaded = !0;
+        n.version = "2.0";
+        n.queue = [];
+        t = b.createElement(e);
+        t.async = !0;
+        t.src = v;
+        s = b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t, s);
+      })(
+        window,
+        document,
+        "script",
+        "https://connect.facebook.net/en_US/fbevents.js"
+      );
+      fbq("init", "1798743454040786");
+      fbq("track", "PageView");
+    </script>
+    <noscript
+      ><img
+        height="1"
+        width="1"
+        style="display: none"
+        src="https://www.facebook.com/tr?id=1798743454040786&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- End Meta Pixel Code -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}{{ site_config.site_name }}{% endblock %}</title>
-    
+
     <!-- Favicon -->
-    <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
-    
+    <link
+      rel="icon"
+      href="{% static 'images/favicon.ico' %}"
+      type="image/x-icon"
+    />
+
     <!-- Tailwind CSS (CDN) -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
     <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
+      body {
+        font-family: "Inter", sans-serif;
+      }
+
+      /* Плавная прокрутка */
+      html {
+        scroll-behavior: smooth;
+      }
+
+      /* Анимации */
+      .fade-in {
+        animation: fadeIn 0.6s ease-in-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
         }
-        
-        /* Плавная прокрутка */
-        html {
-            scroll-behavior: smooth;
+        to {
+          opacity: 1;
+          transform: translateY(0);
         }
-        
-        /* Анимации */
-        .fade-in {
-            animation: fadeIn 0.6s ease-in-out;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+      }
     </style>
 
     {% block extra_head %}{% endblock %}
-</head>
-<body class="bg-gray-50 text-gray-800">
+  </head>
+  <body class="bg-gray-50 text-gray-800">
     <!-- Формы для переключения языков (скрытые) -->
-    {% get_available_languages as LANGUAGES %}
-    {% for lang_code, lang_name in LANGUAGES %}
-    <form action="{% url 'set_language' %}" method="post" id="lang-form-{{ lang_code }}" class="hidden">
-        {% csrf_token %}
-        <input name="next" type="hidden" id="next-input-{{ lang_code }}" value="">
-        <input name="language" type="hidden" value="{{ lang_code }}">
+    {% get_available_languages as LANGUAGES %} {% for lang_code, lang_name in
+    LANGUAGES %}
+    <form
+      action="{% url 'set_language' %}"
+      method="post"
+      id="lang-form-{{ lang_code }}"
+      class="hidden"
+    >
+      {% csrf_token %}
+      <input
+        name="next"
+        type="hidden"
+        id="next-input-{{ lang_code }}"
+        value=""
+      />
+      <input name="language" type="hidden" value="{{ lang_code }}" />
     </form>
     {% endfor %}
 
     <!-- Навигация -->
     <header class="fixed w-full top-0 bg-white shadow-md z-50">
-        <div class="container mx-auto px-4 py-3">
-            <div class="flex justify-between items-center">
-                <!-- Лого и название -->
-                <a href="#hero" class="flex items-center space-x-2 text-blue-600 font-bold text-xl md:text-2xl">
-                    <span>{{ site_config.site_name }}</span>
-                </a>
-                
-                <!-- Десктопное меню -->
-                <nav class="hidden md:flex space-x-8">
-                    <a href="#about" class="font-medium hover:text-blue-600 transition-colors">{% trans "О нас" %}</a>
-                    <a href="#managers" class="font-medium hover:text-blue-600 transition-colors">{% trans "Менеджеры" %}</a>
-                    <a href="#visa-directions" class="font-medium hover:text-blue-600 transition-colors">{% trans "Направления виз" %}</a>
-                    <a href="#testimonials" class="font-medium hover:text-blue-600 transition-colors">{% trans "Отзывы" %}</a>
-                    <a href="#contact" class="font-medium hover:text-blue-600 transition-colors">{% trans "Контакты" %}</a>
-                </nav>
-                
-                <!-- Мобильное меню (кнопка) -->
-                <button id="mobile-menu-button" class="md:hidden text-gray-600 focus:outline-none">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                </button>
-                
-                <!-- Переключатель языков -->
-                <div class="hidden md:block">
-                    <div class="relative inline-block text-left">
-                        <button id="language-button" class="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none">
-                            {% trans "Язык" %} ({{ LANGUAGE_CODE|upper }})
-                            <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                            </svg>
-                        </button>
-                        <div id="language-dropdown" class="hidden origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100">
-                            <div class="py-1">
-                                {% for lang_code, lang_name in LANGUAGES %}
-                                <a href="#" 
-                                   onclick="return handleLanguageChange('{{ lang_code }}');" 
-                                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {% if LANGUAGE_CODE == lang_code %}bg-blue-50 text-blue-600{% endif %}">
-                                    {{ lang_name }}
-                                </a>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
+      <div class="container mx-auto px-4 py-3">
+        <div class="flex justify-between items-center">
+          <!-- Лого и название -->
+          <a
+            href="#hero"
+            class="flex items-center space-x-2 text-blue-600 font-bold text-xl md:text-2xl"
+          >
+            <span>{{ site_config.site_name }}</span>
+          </a>
+
+          <!-- Десктопное меню -->
+          <nav class="hidden md:flex space-x-8">
+            <a
+              href="#about"
+              class="font-medium hover:text-blue-600 transition-colors"
+              >{% trans "О нас" %}</a
+            >
+            <a
+              href="#managers"
+              class="font-medium hover:text-blue-600 transition-colors"
+              >{% trans "Менеджеры" %}</a
+            >
+            <a
+              href="#visa-directions"
+              class="font-medium hover:text-blue-600 transition-colors"
+              >{% trans "Направления виз" %}</a
+            >
+            <a
+              href="#testimonials"
+              class="font-medium hover:text-blue-600 transition-colors"
+              >{% trans "Отзывы" %}</a
+            >
+            <a
+              href="#contact"
+              class="font-medium hover:text-blue-600 transition-colors"
+              >{% trans "Контакты" %}</a
+            >
+          </nav>
+
+          <!-- Мобильное меню (кнопка) -->
+          <button
+            id="mobile-menu-button"
+            class="md:hidden text-gray-600 focus:outline-none"
+          >
+            <svg
+              class="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              ></path>
+            </svg>
+          </button>
+
+          <!-- Переключатель языков -->
+          <div class="hidden md:block">
+            <div class="relative inline-block text-left">
+              <button
+                id="language-button"
+                class="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none"
+              >
+                {% trans "Язык" %} ({{ LANGUAGE_CODE|upper }})
+                <svg
+                  class="-mr-1 ml-2 h-5 w-5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </button>
+              <div
+                id="language-dropdown"
+                class="hidden origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100"
+              >
+                <div class="py-1">
+                  {% for lang_code, lang_name in LANGUAGES %}
+                  <a
+                    href="#"
+                    onclick="return handleLanguageChange('{{ lang_code }}');"
+                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {% if LANGUAGE_CODE == lang_code %}bg-blue-50 text-blue-600{% endif %}"
+                  >
+                    {{ lang_name }}
+                  </a>
+                  {% endfor %}
                 </div>
+              </div>
             </div>
-            
-            <!-- Мобильное меню (выпадающее) -->
-            <div id="mobile-menu" class="hidden md:hidden mt-4 pb-4">
-                <div class="flex flex-col space-y-4">
-                    <a href="#about" class="font-medium hover:text-blue-600 transition-colors">{% trans "О нас" %}</a>
-                    <a href="#managers" class="font-medium hover:text-blue-600 transition-colors">{% trans "Менеджеры" %}</a>
-                    <a href="#visa-directions" class="font-medium hover:text-blue-600 transition-colors">{% trans "Направления виз" %}</a>
-                    <a href="#testimonials" class="font-medium hover:text-blue-600 transition-colors">{% trans "Отзывы" %}</a>
-                    <a href="#contact" class="font-medium hover:text-blue-600 transition-colors">{% trans "Контакты" %}</a>
-                    
-                    <!-- Языки (мобильная версия) -->
-                    <div class="pt-2 border-t border-gray-200">
-                        <p class="text-sm text-gray-500 mb-2">{% trans "Выберите язык:" %}</p>
-                        <div class="grid grid-cols-2 gap-2">
-                            {% for lang_code, lang_name in LANGUAGES %}
-                            <a href="#" 
-                               onclick="return handleLanguageChange('{{ lang_code }}');" 
-                               class="text-sm py-1 px-2 border rounded text-center {% if LANGUAGE_CODE == lang_code %}bg-blue-50 border-blue-300 text-blue-600{% else %}border-gray-200 hover:bg-gray-50{% endif %}">
-                                {{ lang_name }}
-                            </a>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
+
+        <!-- Мобильное меню (выпадающее) -->
+        <div id="mobile-menu" class="hidden md:hidden mt-4 pb-4">
+          <div class="flex flex-col space-y-4">
+            <a
+              href="#about"
+              class="font-medium hover:text-blue-600 transition-colors"
+              >{% trans "О нас" %}</a
+            >
+            <a
+              href="#managers"
+              class="font-medium hover:text-blue-600 transition-colors"
+              >{% trans "Менеджеры" %}</a
+            >
+            <a
+              href="#visa-directions"
+              class="font-medium hover:text-blue-600 transition-colors"
+              >{% trans "Направления виз" %}</a
+            >
+            <a
+              href="#testimonials"
+              class="font-medium hover:text-blue-600 transition-colors"
+              >{% trans "Отзывы" %}</a
+            >
+            <a
+              href="#contact"
+              class="font-medium hover:text-blue-600 transition-colors"
+              >{% trans "Контакты" %}</a
+            >
+
+            <!-- Языки (мобильная версия) -->
+            <div class="pt-2 border-t border-gray-200">
+              <p class="text-sm text-gray-500 mb-2">
+                {% trans "Выберите язык:" %}
+              </p>
+              <div class="grid grid-cols-2 gap-2">
+                {% for lang_code, lang_name in LANGUAGES %}
+                <a
+                  href="#"
+                  onclick="return handleLanguageChange('{{ lang_code }}');"
+                  class="text-sm py-1 px-2 border rounded text-center {% if LANGUAGE_CODE == lang_code %}bg-blue-50 border-blue-300 text-blue-600{% else %}border-gray-200 hover:bg-gray-50{% endif %}"
+                >
+                  {{ lang_name }}
+                </a>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </header>
 
-    <main class="mt-16">
-        {% block content %}{% endblock %}
-    </main>
-    
+    <main class="mt-16">{% block content %}{% endblock %}</main>
+
     <!-- Футер -->
     <footer class="bg-gray-800 text-white py-12">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Колонка 1: О компании -->
-                <div>
-                    <h3 class="text-xl font-bold mb-4">{{ site_config.site_name }}</h3>
-                    <p class="text-gray-300 mb-4">{{ site_config.site_slogan }}</p>
-                    <p class="text-gray-300">{{ site_config.address }}</p>
-                </div>
-                
-                <!-- Колонка 2: Навигация -->
-                <div>
-                    <h3 class="text-xl font-bold mb-4">{% trans "Навигация" %}</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#about" class="text-gray-300 hover:text-white transition-colors">{% trans "О нас" %}</a></li>
-                        <li><a href="#managers" class="text-gray-300 hover:text-white transition-colors">{% trans "Менеджеры" %}</a></li>
-                        <li><a href="#visa-directions" class="text-gray-300 hover:text-white transition-colors">{% trans "Направления виз" %}</a></li>
-                        <li><a href="#testimonials" class="text-gray-300 hover:text-white transition-colors">{% trans "Отзывы" %}</a></li>
-                        <li><a href="#contact" class="text-gray-300 hover:text-white transition-colors">{% trans "Контакты" %}</a></li>
-                    </ul>
-                </div>
-                
-                <!-- Колонка 3: Контакты -->
-                <div>
-                    <h3 class="text-xl font-bold mb-4">{% trans "Контакты" %}</h3>
-                    <ul class="space-y-2">
-                        {% if site_config.phone %}
-                        <li class="flex items-center space-x-2">
-                            <i class="fas fa-phone text-blue-400"></i>
-                            <a href="tel:{{ site_config.phone }}" class="text-gray-300 hover:text-white transition-colors">{{ site_config.phone }}</a>
-                        </li>
-                        {% endif %}
-                        
-                        {% if site_config.email %}
-                        <li class="flex items-center space-x-2">
-                            <i class="fas fa-envelope text-blue-400"></i>
-                            <a href="mailto:{{ site_config.email }}" class="text-gray-300 hover:text-white transition-colors">{{ site_config.email }}</a>
-                        </li>
-                        {% endif %}
-                        
-                        {% if site_config.whatsapp %}
-                        <li class="flex items-center space-x-2">
-                            <i class="fab fa-whatsapp text-blue-400"></i>
-                            <a href="https://wa.me/{{ site_config.whatsapp }}" target="_blank" class="text-gray-300 hover:text-white transition-colors">WhatsApp</a>
-                        </li>
-                        {% endif %}
-                        
-                        {% if site_config.telegram %}
-                        <li class="flex items-center space-x-2">
-                            <i class="fab fa-telegram text-blue-400"></i>
-                            <a href="https://t.me/{{ site_config.telegram }}" target="_blank" class="text-gray-300 hover:text-white transition-colors">Telegram</a>
-                        </li>
-                        {% endif %}
-                        
-                        {% if site_config.instagram %}
-                        <li class="flex items-center space-x-2">
-                            <i class="fab fa-instagram text-blue-400"></i>
-                            <a href="https://instagram.com/{{ site_config.instagram }}" target="_blank" class="text-gray-300 hover:text-white transition-colors">Instagram</a>
-                        </li>
-                        {% endif %}
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-                <p>&copy; {% now "Y" %} {{ site_config.site_name }}. {% trans "Все права защищены." %}</p>
-            </div>
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Колонка 1: О компании -->
+          <div>
+            <h3 class="text-xl font-bold mb-4">{{ site_config.site_name }}</h3>
+            <p class="text-gray-300 mb-4">{{ site_config.site_slogan }}</p>
+            <p class="text-gray-300">{{ site_config.address }}</p>
+          </div>
+
+          <!-- Колонка 2: Навигация -->
+          <div>
+            <h3 class="text-xl font-bold mb-4">{% trans "Навигация" %}</h3>
+            <ul class="space-y-2">
+              <li>
+                <a
+                  href="#about"
+                  class="text-gray-300 hover:text-white transition-colors"
+                  >{% trans "О нас" %}</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#managers"
+                  class="text-gray-300 hover:text-white transition-colors"
+                  >{% trans "Менеджеры" %}</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#visa-directions"
+                  class="text-gray-300 hover:text-white transition-colors"
+                  >{% trans "Направления виз" %}</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#testimonials"
+                  class="text-gray-300 hover:text-white transition-colors"
+                  >{% trans "Отзывы" %}</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#contact"
+                  class="text-gray-300 hover:text-white transition-colors"
+                  >{% trans "Контакты" %}</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <!-- Колонка 3: Контакты -->
+          <div>
+            <h3 class="text-xl font-bold mb-4">{% trans "Контакты" %}</h3>
+            <ul class="space-y-2">
+              {% if site_config.phone %}
+              <li class="flex items-center space-x-2">
+                <i class="fas fa-phone text-blue-400"></i>
+                <a
+                  href="tel:{{ site_config.phone }}"
+                  class="text-gray-300 hover:text-white transition-colors"
+                  >{{ site_config.phone }}</a
+                >
+              </li>
+              {% endif %} {% if site_config.email %}
+              <li class="flex items-center space-x-2">
+                <i class="fas fa-envelope text-blue-400"></i>
+                <a
+                  href="mailto:{{ site_config.email }}"
+                  class="text-gray-300 hover:text-white transition-colors"
+                  >{{ site_config.email }}</a
+                >
+              </li>
+              {% endif %} {% if site_config.whatsapp %}
+              <li class="flex items-center space-x-2">
+                <i class="fab fa-whatsapp text-blue-400"></i>
+                <a
+                  href="https://wa.me/{{ site_config.whatsapp }}"
+                  target="_blank"
+                  class="text-gray-300 hover:text-white transition-colors"
+                  >WhatsApp</a
+                >
+              </li>
+              {% endif %} {% if site_config.telegram %}
+              <li class="flex items-center space-x-2">
+                <i class="fab fa-telegram text-blue-400"></i>
+                <a
+                  href="https://t.me/{{ site_config.telegram }}"
+                  target="_blank"
+                  class="text-gray-300 hover:text-white transition-colors"
+                  >Telegram</a
+                >
+              </li>
+              {% endif %} {% if site_config.instagram %}
+              <li class="flex items-center space-x-2">
+                <i class="fab fa-instagram text-blue-400"></i>
+                <a
+                  href="https://instagram.com/{{ site_config.instagram }}"
+                  target="_blank"
+                  class="text-gray-300 hover:text-white transition-colors"
+                  >Instagram</a
+                >
+              </li>
+              {% endif %}
+            </ul>
+          </div>
         </div>
+
+        <div
+          class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400"
+        >
+          <p>
+            &copy; {% now "Y" %} {{ site_config.site_name }}. {% trans "Все
+            права защищены." %}
+          </p>
+        </div>
+      </div>
     </footer>
-    
+
     <!-- Кнопка прокрутки вверх -->
-    <button id="scroll-to-top" class="fixed bottom-5 right-5 bg-blue-600 text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center opacity-0 transition-opacity duration-300">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
-        </svg>
+    <button
+      id="scroll-to-top"
+      class="fixed bottom-5 right-5 bg-blue-600 text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center opacity-0 transition-opacity duration-300"
+    >
+      <svg
+        class="w-6 h-6"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M5 10l7-7m0 0l7 7m-7-7v18"
+        ></path>
+      </svg>
     </button>
-    
+
     <!-- Уведомления -->
     {% if messages %}
     <div id="messages" class="fixed bottom-5 right-5 z-50 w-full max-w-sm">
-        {% for message in messages %}
-        <div class="bg-white border-l-4 {% if message.tags == 'success' %}border-green-500{% elif message.tags == 'error' %}border-red-500{% else %}border-blue-500{% endif %} rounded shadow-lg p-4 mb-4 flex items-start fade-in">
-            <div class="text-{% if message.tags == 'success' %}green{% elif message.tags == 'error' %}red{% else %}blue{% endif %}-500 mr-3">
-                {% if message.tags == 'success' %}
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-                {% elif message.tags == 'error' %}
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
-                {% else %}
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                {% endif %}
-            </div>
-            <div class="flex-1">
-                <p class="text-gray-800">{{ message }}</p>
-            </div>
-            <button class="text-gray-400 hover:text-gray-600 transition-colors ml-4 message-close">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
-            </button>
+      {% for message in messages %}
+      <div
+        class="bg-white border-l-4 {% if message.tags == 'success' %}border-green-500{% elif message.tags == 'error' %}border-red-500{% else %}border-blue-500{% endif %} rounded shadow-lg p-4 mb-4 flex items-start fade-in"
+      >
+        <div
+          class="text-{% if message.tags == 'success' %}green{% elif message.tags == 'error' %}red{% else %}blue{% endif %}-500 mr-3"
+        >
+          {% if message.tags == 'success' %}
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 13l4 4L19 7"
+            ></path>
+          </svg>
+          {% elif message.tags == 'error' %}
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
+          </svg>
+          {% else %}
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            ></path>
+          </svg>
+          {% endif %}
         </div>
-        {% endfor %}
+        <div class="flex-1">
+          <p class="text-gray-800">{{ message }}</p>
+        </div>
+        <button
+          class="text-gray-400 hover:text-gray-600 transition-colors ml-4 message-close"
+        >
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
+          </svg>
+        </button>
+      </div>
+      {% endfor %}
     </div>
     {% endif %}
-    
+
     <!-- Скрипты -->
     <script>
-        // Функция для обработки смены языка
-        function handleLanguageChange(langCode) {
-    const availableLangs = [{% for lang_code, lang_name in LANGUAGES %}'{{ lang_code }}'{% if not forloop.last %}, {% endif %}{% endfor %}];
-    
-    // Получаем текущий путь
-    let currentPath = window.location.pathname;
-    
-    // Определяем, есть ли префикс языка в текущем пути
-    let hasLangPrefix = false;
-    let currentLang = '';
-    let pathWithoutLang = currentPath;
-    
-    for (const lang of availableLangs) {
-        if (currentPath === '/' + lang || currentPath.startsWith('/' + lang + '/')) {
-            hasLangPrefix = true;
-            currentLang = lang;
-            pathWithoutLang = currentPath.substring(lang.length + 1);
-            if (pathWithoutLang === '') pathWithoutLang = '/';
-            break;
-        }
-    }
-    
-    // Особый случай для русского языка (язык по умолчанию)
-    if (langCode === 'ru') {
-        // Для русского языка используем путь без префикса
-        document.getElementById('next-input-' + langCode).value = pathWithoutLang || '/';
-    } else {
-        // Для других языков добавляем префикс
-        let newPath;
-        if (hasLangPrefix) {
-            // Заменяем существующий префикс
-            if (pathWithoutLang === '/') {
-                newPath = '/' + langCode;
-            } else {
-                newPath = '/' + langCode + '/' + pathWithoutLang;
-            }
-        } else {
-            // Добавляем префикс к пути без языка
-            if (currentPath === '/') {
-                newPath = '/' + langCode;
-            } else {
-                // Если путь уже имеет начальный слеш, не добавляем еще один
-                newPath = '/' + langCode + currentPath;
-            }
-        }
-        document.getElementById('next-input-' + langCode).value = newPath;
-    }
-    
-    // Отправляем форму
-    document.getElementById('lang-form-' + langCode).submit();
-    return false;
-}
-        
-        // Переключение мобильного меню
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        
-        mobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-        
-        // Переключение выпадающего меню языков
-        const languageButton = document.getElementById('language-button');
-        const languageDropdown = document.getElementById('language-dropdown');
-        
-        if (languageButton && languageDropdown) {
-            languageButton.addEventListener('click', () => {
-                languageDropdown.classList.toggle('hidden');
-            });
-            
-            // Скрытие выпадающего меню при клике вне него
-            document.addEventListener('click', (event) => {
-                if (!languageButton.contains(event.target) && !languageDropdown.contains(event.target)) {
-                    languageDropdown.classList.add('hidden');
-                }
-            });
-        }
-        
-        // Кнопка прокрутки вверх
-        const scrollToTopButton = document.getElementById('scroll-to-top');
-        
-        window.addEventListener('scroll', () => {
-            if (window.pageYOffset > 300) {
-                scrollToTopButton.classList.replace('opacity-0', 'opacity-100');
-            } else {
-                scrollToTopButton.classList.replace('opacity-100', 'opacity-0');
-            }
-        });
-        
-        scrollToTopButton.addEventListener('click', () => {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        });
-        
-        // Закрытие уведомлений
-        const messageCloseButtons = document.querySelectorAll('.message-close');
-        
-        messageCloseButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const message = button.closest('div.fade-in');
-                message.style.opacity = '0';
-                message.style.transform = 'translateY(10px)';
-                
-                setTimeout(() => {
-                    message.remove();
-                }, 300);
-            });
-        });
-        
-        // Автоматическое скрытие уведомлений через 5 секунд
-        setTimeout(() => {
-            const messages = document.querySelectorAll('#messages .fade-in');
-            
-            messages.forEach(message => {
-                message.style.opacity = '0';
-                message.style.transform = 'translateY(10px)';
-                
-                setTimeout(() => {
-                    message.remove();
-                }, 300);
-            });
-        }, 5000);
-        
-        // Плавная прокрутка к якорям
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                const targetId = this.getAttribute('href');
-                if (targetId === '#') return;
-                
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    // Закрыть мобильное меню при переходе по ссылке
-                    if (!mobileMenu.classList.contains('hidden')) {
-                        mobileMenu.classList.add('hidden');
-                    }
-                    
-                    const headerOffset = 80; // Высота шапки
-                    const targetPosition = targetElement.offsetTop - headerOffset;
-                    
-                    window.scrollTo({
-                        top: targetPosition,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
+              // Функция для обработки смены языка
+              function handleLanguageChange(langCode) {
+          const availableLangs = [{% for lang_code, lang_name in LANGUAGES %}'{{ lang_code }}'{% if not forloop.last %}, {% endif %}{% endfor %}];
+
+          // Получаем текущий путь
+          let currentPath = window.location.pathname;
+
+          // Определяем, есть ли префикс языка в текущем пути
+          let hasLangPrefix = false;
+          let currentLang = '';
+          let pathWithoutLang = currentPath;
+
+          for (const lang of availableLangs) {
+              if (currentPath === '/' + lang || currentPath.startsWith('/' + lang + '/')) {
+                  hasLangPrefix = true;
+                  currentLang = lang;
+                  pathWithoutLang = currentPath.substring(lang.length + 1);
+                  if (pathWithoutLang === '') pathWithoutLang = '/';
+                  break;
+              }
+          }
+
+          // Особый случай для русского языка (язык по умолчанию)
+          if (langCode === 'ru') {
+              // Для русского языка используем путь без префикса
+              document.getElementById('next-input-' + langCode).value = pathWithoutLang || '/';
+          } else {
+              // Для других языков добавляем префикс
+              let newPath;
+              if (hasLangPrefix) {
+                  // Заменяем существующий префикс
+                  if (pathWithoutLang === '/') {
+                      newPath = '/' + langCode;
+                  } else {
+                      newPath = '/' + langCode + '/' + pathWithoutLang;
+                  }
+              } else {
+                  // Добавляем префикс к пути без языка
+                  if (currentPath === '/') {
+                      newPath = '/' + langCode;
+                  } else {
+                      // Если путь уже имеет начальный слеш, не добавляем еще один
+                      newPath = '/' + langCode + currentPath;
+                  }
+              }
+              document.getElementById('next-input-' + langCode).value = newPath;
+          }
+
+          // Отправляем форму
+          document.getElementById('lang-form-' + langCode).submit();
+          return false;
+      }
+
+              // Переключение мобильного меню
+              const mobileMenuButton = document.getElementById('mobile-menu-button');
+              const mobileMenu = document.getElementById('mobile-menu');
+
+              mobileMenuButton.addEventListener('click', () => {
+                  mobileMenu.classList.toggle('hidden');
+              });
+
+              // Переключение выпадающего меню языков
+              const languageButton = document.getElementById('language-button');
+              const languageDropdown = document.getElementById('language-dropdown');
+
+              if (languageButton && languageDropdown) {
+                  languageButton.addEventListener('click', () => {
+                      languageDropdown.classList.toggle('hidden');
+                  });
+
+                  // Скрытие выпадающего меню при клике вне него
+                  document.addEventListener('click', (event) => {
+                      if (!languageButton.contains(event.target) && !languageDropdown.contains(event.target)) {
+                          languageDropdown.classList.add('hidden');
+                      }
+                  });
+              }
+
+              // Кнопка прокрутки вверх
+              const scrollToTopButton = document.getElementById('scroll-to-top');
+
+              window.addEventListener('scroll', () => {
+                  if (window.pageYOffset > 300) {
+                      scrollToTopButton.classList.replace('opacity-0', 'opacity-100');
+                  } else {
+                      scrollToTopButton.classList.replace('opacity-100', 'opacity-0');
+                  }
+              });
+
+              scrollToTopButton.addEventListener('click', () => {
+                  window.scrollTo({
+                      top: 0,
+                      behavior: 'smooth'
+                  });
+              });
+
+              // Закрытие уведомлений
+              const messageCloseButtons = document.querySelectorAll('.message-close');
+
+              messageCloseButtons.forEach(button => {
+                  button.addEventListener('click', () => {
+                      const message = button.closest('div.fade-in');
+                      message.style.opacity = '0';
+                      message.style.transform = 'translateY(10px)';
+
+                      setTimeout(() => {
+                          message.remove();
+                      }, 300);
+                  });
+              });
+
+              // Автоматическое скрытие уведомлений через 5 секунд
+              setTimeout(() => {
+                  const messages = document.querySelectorAll('#messages .fade-in');
+
+                  messages.forEach(message => {
+                      message.style.opacity = '0';
+                      message.style.transform = 'translateY(10px)';
+
+                      setTimeout(() => {
+                          message.remove();
+                      }, 300);
+                  });
+              }, 5000);
+
+              // Плавная прокрутка к якорям
+              document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                  anchor.addEventListener('click', function(e) {
+                      e.preventDefault();
+
+                      const targetId = this.getAttribute('href');
+                      if (targetId === '#') return;
+
+                      const targetElement = document.querySelector(targetId);
+                      if (targetElement) {
+                          // Закрыть мобильное меню при переходе по ссылке
+                          if (!mobileMenu.classList.contains('hidden')) {
+                              mobileMenu.classList.add('hidden');
+                          }
+
+                          const headerOffset = 80; // Высота шапки
+                          const targetPosition = targetElement.offsetTop - headerOffset;
+
+                          window.scrollTo({
+                              top: targetPosition,
+                              behavior: 'smooth'
+                          });
+                      }
+                  });
+              });
     </script>
-    
+
     {% block extra_scripts %}{% endblock %}
-</body>
+  </body>
 </html>

@@ -1,67 +1,91 @@
-{% load i18n %}
-{% load static %}
+{% load i18n %} {% load static %}
 
 <section id="managers" class="py-20 bg-white">
-    <div class="container mx-auto px-4">
-        <div class="text-center mb-16">
-            <h2 class="text-3xl md:text-4xl font-bold mb-4 text-gray-800">{% trans "Наши менеджеры" %}</h2>
-            <div class="w-24 h-1 bg-blue-600 mx-auto mb-6"></div>
-            <p class="text-gray-600 max-w-3xl mx-auto text-lg">
-                {% trans "Наша команда профессионалов поможет вам оформить визу быстро и без лишних хлопот. Мы говорим на вашем языке!" %}
-            </p>
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold mb-4 text-gray-800">
+        {% trans "Наши менеджеры" %}
+      </h2>
+      <div class="w-24 h-1 bg-blue-600 mx-auto mb-6"></div>
+      <p class="text-gray-600 max-w-3xl mx-auto text-lg">
+        {% trans "Наша команда профессионалов поможет вам оформить визу быстро и
+        без лишних хлопот. Мы говорим на вашем языке!" %}
+      </p>
+    </div>
+
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
+    >
+      {% for manager in managers %}
+      <div
+        class="bg-gray-50 rounded-xl overflow-hidden shadow-lg transition-transform hover:transform hover:scale-105 fade-in"
+      >
+        <div class="relative">
+          {% if manager.photo %}
+          <img
+            src="{{ manager.photo.url }}"
+            alt="{{ manager.name }}"
+            class="w-full h-64 object-cover"
+          />
+          {% else %}
+          <div class="w-full h-64 bg-gray-300 flex items-center justify-center">
+            <i class="fas fa-user-tie text-4xl text-gray-400"></i>
+          </div>
+          {% endif %}
+
+          <!-- Оверлей с градиентом -->
+          <div
+            class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"
+          ></div>
+
+          <!-- Информация поверх фото -->
+          <div class="absolute bottom-0 left-0 right-0 p-4 text-white">
+            <h3 class="text-xl font-bold">{{ manager.name }}</h3>
+            <p class="text-blue-200">{{ manager.position }}</p>
+          </div>
         </div>
-        
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {% for manager in managers %}
-            <div class="bg-gray-50 rounded-xl overflow-hidden shadow-lg transition-transform hover:transform hover:scale-105 fade-in">
-                <div class="relative">
-                    {% if manager.photo %}
-                    <img src="{{ manager.photo.url }}" alt="{{ manager.name }}" class="w-full h-64 object-cover">
-                    {% else %}
-                    <div class="w-full h-64 bg-gray-300 flex items-center justify-center">
-                        <i class="fas fa-user-tie text-4xl text-gray-400"></i>
-                    </div>
-                    {% endif %}
-                    
-                    <!-- Оверлей с градиентом -->
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-                    
-                    <!-- Информация поверх фото -->
-                    <div class="absolute bottom-0 left-0 right-0 p-4 text-white">
-                        <h3 class="text-xl font-bold">{{ manager.name }}</h3>
-                        <p class="text-blue-200">{{ manager.position }}</p>
-                    </div>
-                </div>
-                
-                <div class="p-6">
-                    <div class="prose mb-4 text-gray-700">
-                        {{ manager.description|linebreaks }}
-                    </div>
-                    
-                    <!-- Контакты -->
-                    <div class="flex flex-wrap gap-3">
-                        {% if manager.email %}
+
+        <div class="p-6">
+          <div class="prose mb-4 text-gray-700">
+            {{ manager.description|linebreaks }}
+          </div>
+
+          <!-- Контакты -->
+          <div class="flex flex-wrap gap-3">
+            <!-- {% if manager.email %}
                         <a href="mailto:{{ manager.email }}" class="flex items-center bg-blue-50 hover:bg-blue-100 text-blue-600 px-3 py-2 rounded-lg transition-colors">
                             <i class="fas fa-envelope mr-2"></i>
-                            <span class="text-sm">Email</span>
+                            <span class="text-sm">Whatsapp</span>
                         </a>
-                        {% endif %}
-                        
-                        {% if manager.phone %}
-                        <a href="tel:{{ manager.phone }}" class="flex items-center bg-green-50 hover:bg-green-100 text-green-600 px-3 py-2 rounded-lg transition-colors">
-                            <i class="fas fa-phone mr-2"></i>
-                            <span class="text-sm">{% trans "Позвонить" %}</span>
-                        </a>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-            {% empty %}
-            <div class="col-span-full text-center py-12 text-gray-500">
-                <i class="fas fa-users text-5xl mb-4"></i>
-                <p>{% trans "Информация о менеджерах скоро появится." %}</p>
-            </div>
-            {% endfor %}
+                        {% endif %} -->
+
+            {% if manager.phone %}
+            <a
+              href="https://wa.me/{{ manager.phone|cut:'+' }}"
+              target="_blank"
+              class="flex items-center bg-blue-50 hover:bg-blue-100 text-blue-600 px-3 py-2 rounded-lg transition-colors"
+            >
+              <i class="fab fa-whatsapp mr-2"></i>
+              <span class="text-sm">Whatsapp</span>
+            </a>
+            {% endif %} {% if manager.phone %}
+            <a
+              href="tel:{{ manager.phone }}"
+              class="flex items-center bg-green-50 hover:bg-green-100 text-green-600 px-3 py-2 rounded-lg transition-colors"
+            >
+              <i class="fas fa-phone mr-2"></i>
+              <span class="text-sm">{% trans "Позвонить" %}</span>
+            </a>
+            {% endif %}
+          </div>
         </div>
+      </div>
+      {% empty %}
+      <div class="col-span-full text-center py-12 text-gray-500">
+        <i class="fas fa-users text-5xl mb-4"></i>
+        <p>{% trans "Информация о менеджерах скоро появится." %}</p>
+      </div>
+      {% endfor %}
     </div>
+  </div>
 </section>
