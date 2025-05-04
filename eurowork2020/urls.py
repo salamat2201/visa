@@ -6,7 +6,7 @@ from django.conf.urls.i18n import i18n_patterns
 
 # Сначала определяем не-i18n шаблоны URL
 urlpatterns = [
-    # Встроенный обработчик переключения языков
+    # Здесь есть маршрут для переключения языков
     path('i18n/', include('django.conf.urls.i18n')),
 ]
 

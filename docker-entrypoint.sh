@@ -1,41 +1,52 @@
 #!/bin/bash
 
-# Ожидание запуска PostgreSQL
-echo "Waiting for PostgreSQL to start..."
-while ! pg_isready -h $DB_HOST -p $DB_PORT -U $DB_USER
-do
-  echo "Waiting for database connection..."
-  sleep 2
+set -e
+
+# Вывод информации о подключении к базе данных для отладки
+echo "Информация о подключении к базе данных:"
+echo "PGHOST: $PGHOST"
+echo "PGPORT: $PGPORT"
+echo "PGUSER: $PGUSER"
+echo "PGDATABASE: $PGDATABASE"
+
+# Проверка доступности базы данных
+echo "Ожидание готовности базы данных..."
+export PGPASSWORD=$POSTGRES_PASSWORD
+
+# Задержка перед первой проверкой
+sleep 5
+
+# Попытка подключения к базе данных
+until pg_isready -h "$PGHOST" -p "$PGPORT" -U "$PGUSER"; do
+  >&2 echo "База данных еще не доступна - ожидание..."
+  sleep 5
 done
+echo "База данных готова!"
 
 # Применение миграций
-echo "Applying database migrations..."
-python manage.py migrate
-
-# Компиляция переводов
-echo "Compiling translations..."
-python manage.py compilemessages
+echo "Применение миграций базы данных..."
+python manage.py migrate --noinput
 
 # Сбор статических файлов
-echo "Collecting static files..."
+echo "Сбор статических файлов..."
 python manage.py collectstatic --noinput
 
-# Создание суперпользователя если не существует
-echo "Creating superuser if not exists..."
+# Создание суперпользователя
+echo "Создание суперпользователя..."
+DJANGO_SUPERUSER_USERNAME=${DJANGO_SUPERUSER_USERNAME:-admin}
+DJANGO_SUPERUSER_EMAIL=${DJANGO_SUPERUSER_EMAIL:-admin@example.com}
+DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD:-admin}
+
 python manage.py shell -c "
-from django.contrib.auth import get_user_model;
-User = get_user_model();
+from django.contrib.auth import get_user_model
+User = get_user_model()
 if not User.objects.filter(username='$DJANGO_SUPERUSER_USERNAME').exists():
-    User.objects.create_superuser('$DJANGO_SUPERUSER_USERNAME', '$DJANGO_SUPERUSER_EMAIL', '$DJANGO_SUPERUSER_PASSWORD');
-    print('Superuser created.');
+    User.objects.create_superuser('$DJANGO_SUPERUSER_USERNAME', '$DJANGO_SUPERUSER_EMAIL', '$DJANGO_SUPERUSER_PASSWORD')
+    print('Суперпользователь создан')
 else:
-    print('Superuser already exists.')
+    print('Суперпользователь уже существует')
 "
 
-# Настройка порта для Railway
-export PORT=${PORT:-8000}
-echo "Using port: $PORT"
-
-# Запуск сервера Gunicorn с использованием порта из переменной окружения
-echo "Starting Gunicorn server on port $PORT..."
-exec gunicorn eurowork2020.wsgi:application --bind 0.0.0.0:$PORT
+# Запуск Gunicorn
+echo "Запуск Gunicorn..."
+exec gunicorn eurowork2020.wsgi:application --bind 0.0.0.0:8000 --workers 2 --threads 2 --timeout 120
