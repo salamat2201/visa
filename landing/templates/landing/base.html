@@ -2,6 +2,19 @@
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}" class="scroll-smooth">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}{{ site_config.site_name }}{% endblock %}</title>
+
+    <!-- Favicon -->
+    <link
+      rel="icon"
+      href="{% static 'images/favicon.ico' %}"
+      type="image/x-icon"
+    />
+
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <!-- Meta Pixel Code -->
     <script>
       !(function (f, b, e, v, n, t, s) {
@@ -38,19 +51,6 @@
         src="https://www.facebook.com/tr?id=1798743454040786&ev=PageView&noscript=1"
     /></noscript>
     <!-- End Meta Pixel Code -->
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{% block title %}{{ site_config.site_name }}{% endblock %}</title>
-
-    <!-- Favicon -->
-    <link
-      rel="icon"
-      href="{% static 'images/favicon.ico' %}"
-      type="image/x-icon"
-    />
-
-    <!-- Tailwind CSS (CDN) -->
-    <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -97,8 +97,8 @@
   </head>
   <body class="bg-gray-50 text-gray-800">
     <!-- Формы для переключения языков (скрытые) -->
-    {% get_available_languages as LANGUAGES %} 
-    {% for lang_code, lang_name in LANGUAGES %}
+    {% get_available_languages as LANGUAGES %} {% for lang_code, lang_name in
+    LANGUAGES %}
     <form
       action="{% url 'set_language' %}"
       method="post"
@@ -502,11 +502,7 @@
     <script>
               // Функция для обработки смены языка
               function handleLanguageChange(langCode) {
-                const availableLangs = [
-                    {% for lang_code, lang_name in LANGUAGES %}
-                        '{{ lang_code }}'{% if not forloop.last %}, {% endif %}
-                    {% endfor %}
-                ];
+          const availableLangs = [{% for lang_code, lang_name in LANGUAGES %}'{{ lang_code }}'{% if not forloop.last %}, {% endif %}{% endfor %}];
 
           // Получаем текущий путь
           let currentPath = window.location.pathname;
