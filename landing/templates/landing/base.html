@@ -500,156 +500,160 @@
 
     <!-- Скрипты -->
     <script>
-              // Функция для обработки смены языка
-              function handleLanguageChange(langCode) {
-          const availableLangs = [{% for lang_code, lang_name in LANGUAGES %}'{{ lang_code }}'{% if not forloop.last %}, {% endif %}{% endfor %}];
+                    // Функция для обработки смены языка
+                    function handleLanguageChange(langCode) {
+                      const availableLangs = [
+                          {% for lang_code, lang_name in LANGUAGES %}
+                              '{{ lang_code }}'{% if not forloop.last %}, {% endif %}
+                          {% endfor %}
+                      ];
 
-          // Получаем текущий путь
-          let currentPath = window.location.pathname;
+                // Получаем текущий путь
+                let currentPath = window.location.pathname;
 
-          // Определяем, есть ли префикс языка в текущем пути
-          let hasLangPrefix = false;
-          let currentLang = '';
-          let pathWithoutLang = currentPath;
+                // Определяем, есть ли префикс языка в текущем пути
+                let hasLangPrefix = false;
+                let currentLang = '';
+                let pathWithoutLang = currentPath;
 
-          for (const lang of availableLangs) {
-              if (currentPath === '/' + lang || currentPath.startsWith('/' + lang + '/')) {
-                  hasLangPrefix = true;
-                  currentLang = lang;
-                  pathWithoutLang = currentPath.substring(lang.length + 1);
-                  if (pathWithoutLang === '') pathWithoutLang = '/';
-                  break;
-              }
-          }
+                for (const lang of availableLangs) {
+                    if (currentPath === '/' + lang || currentPath.startsWith('/' + lang + '/')) {
+                        hasLangPrefix = true;
+                        currentLang = lang;
+                        pathWithoutLang = currentPath.substring(lang.length + 1);
+                        if (pathWithoutLang === '') pathWithoutLang = '/';
+                        break;
+                    }
+                }
 
-          // Особый случай для русского языка (язык по умолчанию)
-          if (langCode === 'ru') {
-              // Для русского языка используем путь без префикса
-              document.getElementById('next-input-' + langCode).value = pathWithoutLang || '/';
-          } else {
-              // Для других языков добавляем префикс
-              let newPath;
-              if (hasLangPrefix) {
-                  // Заменяем существующий префикс
-                  if (pathWithoutLang === '/') {
-                      newPath = '/' + langCode;
-                  } else {
-                      newPath = '/' + langCode + '/' + pathWithoutLang;
-                  }
-              } else {
-                  // Добавляем префикс к пути без языка
-                  if (currentPath === '/') {
-                      newPath = '/' + langCode;
-                  } else {
-                      // Если путь уже имеет начальный слеш, не добавляем еще один
-                      newPath = '/' + langCode + currentPath;
-                  }
-              }
-              document.getElementById('next-input-' + langCode).value = newPath;
-          }
+                // Особый случай для русского языка (язык по умолчанию)
+                if (langCode === 'ru') {
+                    // Для русского языка используем путь без префикса
+                    document.getElementById('next-input-' + langCode).value = pathWithoutLang || '/';
+                } else {
+                    // Для других языков добавляем префикс
+                    let newPath;
+                    if (hasLangPrefix) {
+                        // Заменяем существующий префикс
+                        if (pathWithoutLang === '/') {
+                            newPath = '/' + langCode;
+                        } else {
+                            newPath = '/' + langCode + '/' + pathWithoutLang;
+                        }
+                    } else {
+                        // Добавляем префикс к пути без языка
+                        if (currentPath === '/') {
+                            newPath = '/' + langCode;
+                        } else {
+                            // Если путь уже имеет начальный слеш, не добавляем еще один
+                            newPath = '/' + langCode + currentPath;
+                        }
+                    }
+                    document.getElementById('next-input-' + langCode).value = newPath;
+                }
 
-          // Отправляем форму
-          document.getElementById('lang-form-' + langCode).submit();
-          return false;
-      }
+                // Отправляем форму
+                document.getElementById('lang-form-' + langCode).submit();
+                return false;
+            }
 
-              // Переключение мобильного меню
-              const mobileMenuButton = document.getElementById('mobile-menu-button');
-              const mobileMenu = document.getElementById('mobile-menu');
+                    // Переключение мобильного меню
+                    const mobileMenuButton = document.getElementById('mobile-menu-button');
+                    const mobileMenu = document.getElementById('mobile-menu');
 
-              mobileMenuButton.addEventListener('click', () => {
-                  mobileMenu.classList.toggle('hidden');
-              });
+                    mobileMenuButton.addEventListener('click', () => {
+                        mobileMenu.classList.toggle('hidden');
+                    });
 
-              // Переключение выпадающего меню языков
-              const languageButton = document.getElementById('language-button');
-              const languageDropdown = document.getElementById('language-dropdown');
+                    // Переключение выпадающего меню языков
+                    const languageButton = document.getElementById('language-button');
+                    const languageDropdown = document.getElementById('language-dropdown');
 
-              if (languageButton && languageDropdown) {
-                  languageButton.addEventListener('click', () => {
-                      languageDropdown.classList.toggle('hidden');
-                  });
+                    if (languageButton && languageDropdown) {
+                        languageButton.addEventListener('click', () => {
+                            languageDropdown.classList.toggle('hidden');
+                        });
 
-                  // Скрытие выпадающего меню при клике вне него
-                  document.addEventListener('click', (event) => {
-                      if (!languageButton.contains(event.target) && !languageDropdown.contains(event.target)) {
-                          languageDropdown.classList.add('hidden');
-                      }
-                  });
-              }
+                        // Скрытие выпадающего меню при клике вне него
+                        document.addEventListener('click', (event) => {
+                            if (!languageButton.contains(event.target) && !languageDropdown.contains(event.target)) {
+                                languageDropdown.classList.add('hidden');
+                            }
+                        });
+                    }
 
-              // Кнопка прокрутки вверх
-              const scrollToTopButton = document.getElementById('scroll-to-top');
+                    // Кнопка прокрутки вверх
+                    const scrollToTopButton = document.getElementById('scroll-to-top');
 
-              window.addEventListener('scroll', () => {
-                  if (window.pageYOffset > 300) {
-                      scrollToTopButton.classList.replace('opacity-0', 'opacity-100');
-                  } else {
-                      scrollToTopButton.classList.replace('opacity-100', 'opacity-0');
-                  }
-              });
+                    window.addEventListener('scroll', () => {
+                        if (window.pageYOffset > 300) {
+                            scrollToTopButton.classList.replace('opacity-0', 'opacity-100');
+                        } else {
+                            scrollToTopButton.classList.replace('opacity-100', 'opacity-0');
+                        }
+                    });
 
-              scrollToTopButton.addEventListener('click', () => {
-                  window.scrollTo({
-                      top: 0,
-                      behavior: 'smooth'
-                  });
-              });
+                    scrollToTopButton.addEventListener('click', () => {
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth'
+                        });
+                    });
 
-              // Закрытие уведомлений
-              const messageCloseButtons = document.querySelectorAll('.message-close');
+                    // Закрытие уведомлений
+                    const messageCloseButtons = document.querySelectorAll('.message-close');
 
-              messageCloseButtons.forEach(button => {
-                  button.addEventListener('click', () => {
-                      const message = button.closest('div.fade-in');
-                      message.style.opacity = '0';
-                      message.style.transform = 'translateY(10px)';
+                    messageCloseButtons.forEach(button => {
+                        button.addEventListener('click', () => {
+                            const message = button.closest('div.fade-in');
+                            message.style.opacity = '0';
+                            message.style.transform = 'translateY(10px)';
 
-                      setTimeout(() => {
-                          message.remove();
-                      }, 300);
-                  });
-              });
+                            setTimeout(() => {
+                                message.remove();
+                            }, 300);
+                        });
+                    });
 
-              // Автоматическое скрытие уведомлений через 5 секунд
-              setTimeout(() => {
-                  const messages = document.querySelectorAll('#messages .fade-in');
+                    // Автоматическое скрытие уведомлений через 5 секунд
+                    setTimeout(() => {
+                        const messages = document.querySelectorAll('#messages .fade-in');
 
-                  messages.forEach(message => {
-                      message.style.opacity = '0';
-                      message.style.transform = 'translateY(10px)';
+                        messages.forEach(message => {
+                            message.style.opacity = '0';
+                            message.style.transform = 'translateY(10px)';
 
-                      setTimeout(() => {
-                          message.remove();
-                      }, 300);
-                  });
-              }, 5000);
+                            setTimeout(() => {
+                                message.remove();
+                            }, 300);
+                        });
+                    }, 5000);
 
-              // Плавная прокрутка к якорям
-              document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                  anchor.addEventListener('click', function(e) {
-                      e.preventDefault();
+                    // Плавная прокрутка к якорям
+                    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                        anchor.addEventListener('click', function(e) {
+                            e.preventDefault();
 
-                      const targetId = this.getAttribute('href');
-                      if (targetId === '#') return;
+                            const targetId = this.getAttribute('href');
+                            if (targetId === '#') return;
 
-                      const targetElement = document.querySelector(targetId);
-                      if (targetElement) {
-                          // Закрыть мобильное меню при переходе по ссылке
-                          if (!mobileMenu.classList.contains('hidden')) {
-                              mobileMenu.classList.add('hidden');
-                          }
+                            const targetElement = document.querySelector(targetId);
+                            if (targetElement) {
+                                // Закрыть мобильное меню при переходе по ссылке
+                                if (!mobileMenu.classList.contains('hidden')) {
+                                    mobileMenu.classList.add('hidden');
+                                }
 
-                          const headerOffset = 80; // Высота шапки
-                          const targetPosition = targetElement.offsetTop - headerOffset;
+                                const headerOffset = 80; // Высота шапки
+                                const targetPosition = targetElement.offsetTop - headerOffset;
 
-                          window.scrollTo({
-                              top: targetPosition,
-                              behavior: 'smooth'
-                          });
-                      }
-                  });
-              });
+                                window.scrollTo({
+                                    top: targetPosition,
+                                    behavior: 'smooth'
+                                });
+                            }
+                        });
+                    });
     </script>
 
     {% block extra_scripts %}{% endblock %}
