@@ -43,7 +43,7 @@
       fbq("init", "1798743454040786");
       fbq("track", "PageView");
     </script>
-    
+
     <noscript
       ><img
         height="1"
@@ -122,7 +122,7 @@
       <div class="container mx-auto px-4 py-3">
         <div class="flex justify-between items-center">
           <!-- Лого и название -->
-          
+          <a
             href="#hero"
             class="flex items-center space-x-2 text-blue-600 font-bold text-xl md:text-2xl"
           >
@@ -131,27 +131,27 @@
 
           <!-- Десктопное меню -->
           <nav class="hidden md:flex space-x-8">
-            
+            <a
               href="#about"
               class="font-medium hover:text-blue-600 transition-colors"
               >{% trans "О нас" %}</a
             >
-            
+            <a
               href="#managers"
               class="font-medium hover:text-blue-600 transition-colors"
               >{% trans "Менеджеры" %}</a
             >
-            
+            <a
               href="#visa-directions"
               class="font-medium hover:text-blue-600 transition-colors"
               >{% trans "Направления виз" %}</a
             >
-            
+            <a
               href="#testimonials"
               class="font-medium hover:text-blue-600 transition-colors"
               >{% trans "Отзывы" %}</a
             >
-            
+            <a
               href="#contact"
               class="font-medium hover:text-blue-600 transition-colors"
               >{% trans "Контакты" %}</a
@@ -207,7 +207,7 @@
               >
                 <div class="py-1">
                   {% for lang_code, lang_name in LANGUAGES %}
-                  
+                  <a
                     href="#"
                     onclick="return handleLanguageChange('{{ lang_code }}');"
                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {% if LANGUAGE_CODE == lang_code %}bg-blue-50 text-blue-600{% endif %}"
@@ -224,27 +224,27 @@
         <!-- Мобильное меню (выпадающее) -->
         <div id="mobile-menu" class="hidden md:hidden mt-4 pb-4">
           <div class="flex flex-col space-y-4">
-            
+            <a
               href="#about"
               class="font-medium hover:text-blue-600 transition-colors"
               >{% trans "О нас" %}</a
             >
-            
+            <a
               href="#managers"
               class="font-medium hover:text-blue-600 transition-colors"
               >{% trans "Менеджеры" %}</a
             >
-            
+            <a
               href="#visa-directions"
               class="font-medium hover:text-blue-600 transition-colors"
               >{% trans "Направления виз" %}</a
             >
-            
+            <a
               href="#testimonials"
               class="font-medium hover:text-blue-600 transition-colors"
               >{% trans "Отзывы" %}</a
             >
-            
+            <a
               href="#contact"
               class="font-medium hover:text-blue-600 transition-colors"
               >{% trans "Контакты" %}</a
@@ -257,7 +257,7 @@
               </p>
               <div class="grid grid-cols-2 gap-2">
                 {% for lang_code, lang_name in LANGUAGES %}
-                
+                <a
                   href="#"
                   onclick="return handleLanguageChange('{{ lang_code }}');"
                   class="text-sm py-1 px-2 border rounded text-center {% if LANGUAGE_CODE == lang_code %}bg-blue-50 border-blue-300 text-blue-600{% else %}border-gray-200 hover:bg-gray-50{% endif %}"
@@ -290,35 +290,35 @@
             <h3 class="text-xl font-bold mb-4">{% trans "Навигация" %}</h3>
             <ul class="space-y-2">
               <li>
-                
+                <a
                   href="#about"
                   class="text-gray-300 hover:text-white transition-colors"
                   >{% trans "О нас" %}</a
                 >
               </li>
               <li>
-                
+                <a
                   href="#managers"
                   class="text-gray-300 hover:text-white transition-colors"
                   >{% trans "Менеджеры" %}</a
                 >
               </li>
               <li>
-                
+                <a
                   href="#visa-directions"
                   class="text-gray-300 hover:text-white transition-colors"
                   >{% trans "Направления виз" %}</a
                 >
               </li>
               <li>
-                
+                <a
                   href="#testimonials"
                   class="text-gray-300 hover:text-white transition-colors"
                   >{% trans "Отзывы" %}</a
                 >
               </li>
               <li>
-                
+                <a
                   href="#contact"
                   class="text-gray-300 hover:text-white transition-colors"
                   >{% trans "Контакты" %}</a
@@ -334,7 +334,7 @@
               {% if site_config.phone %}
               <li class="flex items-center space-x-2">
                 <i class="fas fa-phone text-blue-400"></i>
-                
+                <a
                   href="tel:{{ site_config.phone }}"
                   class="text-gray-300 hover:text-white transition-colors"
                   >{{ site_config.phone }}</a
@@ -343,7 +343,7 @@
               {% endif %} {% if site_config.email %}
               <li class="flex items-center space-x-2">
                 <i class="fas fa-envelope text-blue-400"></i>
-                
+                <a
                   href="mailto:{{ site_config.email }}"
                   class="text-gray-300 hover:text-white transition-colors"
                   >{{ site_config.email }}</a
@@ -352,7 +352,7 @@
               {% endif %} {% if site_config.whatsapp %}
               <li class="flex items-center space-x-2">
                 <i class="fab fa-whatsapp text-blue-400"></i>
-                
+                <a
                   href="https://wa.me/{{ site_config.whatsapp }}"
                   target="_blank"
                   class="text-gray-300 hover:text-white transition-colors"
@@ -362,7 +362,7 @@
               {% endif %} {% if site_config.telegram %}
               <li class="flex items-center space-x-2">
                 <i class="fab fa-telegram text-blue-400"></i>
-                
+                <a
                   href="https://t.me/{{ site_config.telegram }}"
                   target="_blank"
                   class="text-gray-300 hover:text-white transition-colors"
@@ -372,7 +372,7 @@
               {% endif %} {% if site_config.instagram %}
               <li class="flex items-center space-x-2">
                 <i class="fab fa-instagram text-blue-400"></i>
-                
+                <a
                   href="https://instagram.com/{{ site_config.instagram }}"
                   target="_blank"
                   class="text-gray-300 hover:text-white transition-colors"
